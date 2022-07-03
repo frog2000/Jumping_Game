@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Activation, Dropout
+from tensorflow.keras.layers import Dense, Activation, Dropout, BatchNormalization
 from tensorflow.keras.utils import to_categorical, plot_model
 import inspect
 from game_settings import Settings
@@ -18,9 +18,11 @@ def create_nn_model(input_size, num_labels):
         input_dim=input_size
     ))
     model.add(Activation("relu"))
+    # model.add(BatchNormalization())
     model.add(Dropout(dropout))
     model.add(Dense(hidden_units))
     model.add(Activation("relu"))
+    # model.add(BatchNormalization())
     model.add(Dropout(dropout))
     model.add(Dense(num_labels))
     model.add(Activation("softmax"))
@@ -39,7 +41,7 @@ def train_nn_model(model, obstacle_velocities, obstacle_distances, results):
     obstacle_distances = np.array(obstacle_distances)
     results_train = np.array(results)
     results_train = np.reshape(results_train, [results_train.shape[0], -1])
-    results_train = to_categorical(results_train)
+    results_train = to_categorical(results_train, num_classes=2)
     print(results_train)
     obstacle_velocities = obstacle_velocities/100
     obstacle_distances = obstacle_distances/settings.window_width

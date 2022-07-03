@@ -57,7 +57,7 @@ def check_collisions(dino, obstacles, coins, win_sound, crash_sound, settings, s
     for obstacle in obstacles:
         if check_mask_collide(dino, obstacle):
             threading.Thread(target=play_sound, args=[crash_sound]).start()
-            dino_crash(dino, obstacles, coins, settings)
+            dino_crash(dino, obstacles, coins, settings, scores)
             scores.set_default_scores()
             scores.save_jump_data(0)
             break
@@ -66,13 +66,20 @@ def check_collisions(dino, obstacles, coins, win_sound, crash_sound, settings, s
         if check_mask_collide(dino, coin):
             threading.Thread(target=play_sound, args=[win_sound]).start()
             coins.remove(coin)
-            give_reward()
+            give_prize(scores)
             break
 
 
-def dino_crash(dino, obstacles, coins, settings):
+def give_prize(scores):
+    scores.current_score += 100
+    scores.prepare_scores()
+    
+
+def dino_crash(dino, obstacles, coins, settings, scores):
     dino.reset_position()
     settings.set_objects_default_param()
+    scores.set_default_scores()
+    scores.prepare_scores()
 
     for obstacle in obstacles.copy():
         obstacles.remove(obstacle)
@@ -81,10 +88,6 @@ def dino_crash(dino, obstacles, coins, settings):
         coins.remove(coin)
         del coin
     time.sleep(1)
-
-
-def give_reward():
-    pass
 
 
 def calculate_distance_to_obstacle(dino, obstacles, settings):

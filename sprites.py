@@ -8,7 +8,10 @@ cactus_image = pygame.image.load_extended(os.path.join("images", "cactus.png"))
 rock_image = pygame.image.load_extended(os.path.join("images", "rock.png"))
 coin_image = pygame.image.load_extended(os.path.join("images", "coin.png"))
 cloud_image = pygame.image.load_extended(os.path.join("images", "cloud.png"))
-
+path_main_character_images = os.path.join("images", "girl")
+main_character_images = [pygame.image.load_extended(os.path.join(path_main_character_images, image))
+                         for image in os.listdir(path_main_character_images) if
+                         os.path.isfile(os.path.join(path_main_character_images, image))]
 
 class Dino:
 
@@ -20,9 +23,9 @@ class Dino:
         # set up the ship image and the rectangle
 
         # self.dino_animation = SpriteStripAnim('images/dino_running.png', (0, 0, 68, 64), 3, None, True, frames)
-        images = ["dino1.png", "dino2.png", "dino3.png"]
-        self.dino_images = [pygame.image.load_extended("images/"+image) for image in images]
-
+        # images = ["run1.png", "run2.png", "run3.png", "run4.png"]
+        self.dino_images = main_character_images
+        print(main_character_images)
         # self.dino_image = self.dino_animation.next()
         self.dino_image = self.dino_images[0]
         self.mask = pygame.mask.from_surface(self.dino_image)
@@ -111,7 +114,8 @@ class Cactus(Sprite):
 
         if self.rect.right <= 0:
             group.remove(self)
-            scores.num_objects_avoided += 1
+            scores.current_score += 10
+            scores.prepare_scores()
             scores.save_jump_data(1)
             del self
 

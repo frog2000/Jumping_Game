@@ -1,21 +1,28 @@
 from game_func import calculate_distance_to_obstacle
+import pygame.font
 
 class GameScores:
 
-    def __init__(self, settings):
+    def __init__(self, settings, screen):
+        self.screen = screen
+        self.screen_rect = self.screen.get_rect()
         self.settings = settings
         self.max_score = 0
         self.velocities = []
         self.distances = []
         self.success = []
+        self.text_colour = (0, 0, 0)
+        self.font = pygame.font.SysFont(None, 25)
 
         self.temp_velocity = None
         self.temp_distance = None
 
         self.set_default_scores()
+        self.prepare_score()
+        self.prepare_high_score()
 
     def set_default_scores(self):
-        self.num_objects_avoided = 0
+        # self.num_objects_avoided = 0
         self.current_score = 0
 
     def collect_jump_data(self, settings, dino, obstacles):
@@ -32,3 +39,36 @@ class GameScores:
         self.temp_velocity = None
         self.temp_distance = None
         self.success.append(success)
+
+    def prepare_scores(self):
+        self.prepare_score()
+        self.update_max_score()
+        self.prepare_high_score()
+
+    def blit_scoreboards(self):
+        self.screen.blit(self.score_image, self.score_rect)
+        self.screen.blit(self.high_score_image, self.high_score_rect)
+
+    def prepare_score(self):
+        """ Prepares the game score text """
+        self.score_image = self._render_text_image("Score: ", self.current_score)
+        # text image orientation
+        self.score_rect = self.score_image.get_rect()
+        self.score_rect.right = self.screen_rect.right - 20
+        self.score_rect.top = 20
+
+    def prepare_high_score(self):
+        """ Prepares the game score text """
+        self.high_score_image = self._render_text_image("Highest Score: ", self.max_score)
+        # text image orientation
+        self.high_score_rect = self.high_score_image.get_rect()
+        self.high_score_rect.left = self.screen_rect.left + 20
+        self.high_score_rect.top = 20
+
+    def _render_text_image(self, title, stat):
+        """ Renders text """
+        msg = title + str(stat)
+        return self.font.render(msg, True, self.text_colour)
+
+    def update_max_score(self):
+        self.max_score = self.current_score if self.max_score < self.current_score else self.max_score

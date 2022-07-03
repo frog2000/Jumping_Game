@@ -12,7 +12,7 @@ class Settings:
         (self.window_width, self.window_height))
 
         self.dino_acceleration = 2
-        self.animation_interval = self.fps/10
+        self.animation_interval = self.fps/30
         self.speed_up_factor = 1.0001
 
         self.set_dino_velocity()
@@ -25,7 +25,7 @@ class Settings:
         self.dino_jump_velocity = 30
 
     def set_objects_default_param(self):
-        self.object_velocity = 16
+        self.object_velocity = 8
         self.obstacle_interval = 40
 
     def increase_difficulty(self):

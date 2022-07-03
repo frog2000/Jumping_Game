@@ -16,16 +16,14 @@ import game_func
 import neural_network
 
 
-
-
 def run_game():
     pygame.init()
     settings = Settings()
-    scores = GameScores(settings)
-
     screen = pygame.display.set_mode((settings.window_width, settings.window_height))
-    pygame.display.set_caption("Chrome Dino Game")
-    program_icon = pygame.image.load_extended(os.path.join("images", "dino1.png"))
+    scores = GameScores(settings, screen)
+
+    pygame.display.set_caption("Jumping Game")
+    program_icon = pygame.image.load_extended(os.path.join("images", "cactus.png"))
     pygame.display.set_icon(program_icon)
 
     jump_sound = os.path.abspath(os.path.join("sounds", "jump.wav"))
@@ -76,6 +74,8 @@ def run_game():
         dino.update()
         dino.blit_sprite()
         dino.advance_animation()  # go to the next "frame" on the sprite sheet
+        scores.blit_scoreboards()
+
         game_func.check_collisions(dino, obstacles, coins, win_sound, crash_sound, settings, scores)
 
         # clock the game to the specific fps
@@ -83,17 +83,10 @@ def run_game():
         pygame.display.flip()
         settings.increase_difficulty()
 
-        # print(scores.velocities)
-        # print(scores.distances)
-        # print(scores.success)
-
         print("lenght:", len(scores.success), "loops: ", loops)
-        if len(scores.success) >= 25 and loops % 1000 == 0:
+        if len(scores.success) >= 10 and loops % 500 == 0:
             nn_model = neural_network.train_nn_model(nn_model, scores.velocities, scores.distances, scores.success)
 
-
-        # sub = screen.subsurface(screen.get_rect())
-        # pygame.image.save(sub, "screenshot.jpg")
         loops += 1
 
 
