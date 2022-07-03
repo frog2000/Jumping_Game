@@ -10,15 +10,21 @@ def play_sound(sound_file_path):
     playsound(sound_file_path)
 
 
-def check_events(dino, jump_sound):
+def check_events(dino, jump_sound, settings, scores, obstacles):
     """ Checks for input events """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.KEYDOWN:
             if event.key in [pygame.K_UP, pygame.K_SPACE]:
-                dino.jump()
-                threading.Thread(target=play_sound, args=[jump_sound]).start()
+                initiate_jump(dino, jump_sound, settings, scores, obstacles)
+
+
+def initiate_jump(dino, jump_sound, settings, scores, obstacles):
+    if not dino.dino_jumping:
+        dino.dino_jumping = True
+        scores.collect_jump_data(settings, dino, obstacles)
+        threading.Thread(target=play_sound, args=[jump_sound]).start()
 
 
 def _check_if_event_happens(probability_factor):
@@ -35,8 +41,8 @@ def generate_object(objects, obj, screen, settings, probability_factor):
     return False
 
 
-def update_objects(objects):
-    objects.update(objects)
+def update_objects(objects, scores):
+    objects.update(objects, scores)
     for obj in objects:
         obj.blit_sprite()
 
@@ -47,11 +53,13 @@ def check_mask_collide(obj1, obj2):
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
 
 
-def check_collisions(dino, obstacles, coins, win_sound, crash_sound, settings):
+def check_collisions(dino, obstacles, coins, win_sound, crash_sound, settings, scores):
     for obstacle in obstacles:
         if check_mask_collide(dino, obstacle):
             threading.Thread(target=play_sound, args=[crash_sound]).start()
             dino_crash(dino, obstacles, coins, settings)
+            scores.set_default_scores()
+            scores.save_jump_data(0)
             break
 
     for coin in coins:
@@ -77,3 +85,10 @@ def dino_crash(dino, obstacles, coins, settings):
 
 def give_reward():
     pass
+
+
+def calculate_distance_to_obstacle(dino, obstacles, settings):
+    if obstacles.sprites():
+        return obstacles.sprites()[0].rect.left - dino.rect.right
+    else:
+        return settings.window_width

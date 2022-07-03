@@ -25,7 +25,7 @@ class Settings:
         self.dino_jump_velocity = 30
 
     def set_objects_default_param(self):
-        self.object_velocity = 8
+        self.object_velocity = 16
         self.obstacle_interval = 40
 
     def increase_difficulty(self):

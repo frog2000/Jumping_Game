@@ -66,15 +66,15 @@ class Dino:
         """ Places the ship image in the middle of x-axis near the bottom of the screen """
         self.rect.centery = self.screen_rect.bottom - 40
 
-    def progress_animation(self):
+    def advance_animation(self):
         self.current_animation_time += 1
         if self.current_animation_time >= self.settings.animation_interval:
             self._next_image()
             self.current_animation_time = 0
 
-    def jump(self):
-        if not self.dino_jumping:
-            self.dino_jumping = True
+    # def jump(self):
+    #     if not self.dino_jumping:
+    #         self.dino_jumping = True
 
     def _next_image(self):
         if self.current_image >= len(self.dino_images) - 1:
@@ -104,13 +104,15 @@ class Cactus(Sprite):
         """ Draws the ship image """
         self.screen.blit(self.image, self.rect)
 
-    def update(self, group):
+    def update(self, group, scores):
         """ Allows for the alien movement on the x-axis """
         self.centerx -= self.settings.object_velocity
         self.rect.centerx = self.centerx
 
         if self.rect.right <= 0:
             group.remove(self)
+            scores.num_objects_avoided += 1
+            scores.save_jump_data(1)
             del self
 
 
@@ -133,6 +135,16 @@ class Coin(Cactus):
         self.rect = self.image.get_rect()
         self.rect.bottom = self.screen_rect.bottom - 10
 
+    def update(self, group, scores):
+        """ Allows for the alien movement on the x-axis """
+        self.centerx -= self.settings.object_velocity
+        self.rect.centerx = self.centerx
+
+        if self.rect.right <= 0:
+            group.remove(self)
+            scores.current_score += 10
+            del self
+
 
 class Cloud(Cactus):
     def __init__(self, screen, settings):
@@ -142,7 +154,7 @@ class Cloud(Cactus):
         self.rect.bottom = random.randint(70, int(0.4*self.screen_rect.bottom))
         self.cloud_velocity = self.settings.object_velocity*(random.randint(30, 50)/100)
 
-    def update(self, group):
+    def update(self, group, scores=None):
         """ Allows for the alien movement on the x-axis """
         self.centerx -= self.cloud_velocity
         self.rect.centerx = self.centerx
