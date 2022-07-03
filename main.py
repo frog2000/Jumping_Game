@@ -49,8 +49,7 @@ def run_game():
 
     while True:
         # clock the game to the specific fps
-        clock.tick(settings.fps)
-        
+
         screen.blit(settings.background, (0,0))
         game_func.check_events(dino, jump_sound)
 
@@ -67,29 +66,31 @@ def run_game():
                 counter = 0
                 break
 
-
         game_func.generate_object(clouds, Cloud, screen, settings, settings.cloud_generation_probability)
 
-        if counter <= 30:
+        if counter <= settings.obstacle_interval:
             counter += 1
         else:
             allow_ground_object = True
 
 
-        dino.update()
-        dino.blit_sprite()
-        dino.progress_animation()  # go to the next "frame" on the sprite sheet
 
 
         game_func.update_objects(obstacles)
         game_func.update_objects(coins)
         game_func.update_objects(clouds)
 
-        game_func.check_collisions(dino, obstacles, coins, win_sound, crash_sound)
+        dino.update()
+        dino.blit_sprite()
+        dino.progress_animation()  # go to the next "frame" on the sprite sheet
 
 
+        game_func.check_collisions(dino, obstacles, coins, win_sound, crash_sound, settings)
 
+        clock.tick(settings.fps)
         pygame.display.flip()
+        settings.increase_difficulty()
+
         #
         # sub = screen.subsurface(screen.get_rect())
         # pygame.image.save(sub, "screenshot.jpg")

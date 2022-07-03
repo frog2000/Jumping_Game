@@ -13,23 +13,22 @@ class Settings:
 
         self.dino_acceleration = 2
         self.animation_interval = self.fps/10
-        self.speed_up_factor = 1.05
+        self.speed_up_factor = 1.0001
 
         self.set_dino_velocity()
-        self.set_objects_velocity()
+        self.set_objects_default_param()
         self.obstacle_generation_probability = 100
         self.prize_generation_probability = 500
         self.cloud_generation_probability = 300
 
-
-
     def set_dino_velocity(self):
         self.dino_jump_velocity = 30
 
-    def set_objects_velocity(self):
+    def set_objects_default_param(self):
         self.object_velocity = 8
+        self.obstacle_interval = 40
 
-    def increase_objects_velocity(self):
+    def increase_difficulty(self):
         self.object_velocity *= self.speed_up_factor
-
+        self.obstacle_interval /= self.speed_up_factor
 

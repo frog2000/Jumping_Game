@@ -36,7 +36,7 @@ def generate_object(objects, obj, screen, settings, probability_factor):
 
 
 def update_objects(objects):
-    objects.update()
+    objects.update(objects)
     for obj in objects:
         obj.blit_sprite()
 
@@ -47,11 +47,11 @@ def check_mask_collide(obj1, obj2):
     return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) is not None
 
 
-def check_collisions(dino, obstacles, coins, win_sound, crash_sound):
+def check_collisions(dino, obstacles, coins, win_sound, crash_sound, settings):
     for obstacle in obstacles:
         if check_mask_collide(dino, obstacle):
             threading.Thread(target=play_sound, args=[crash_sound]).start()
-            dino_crash(dino, obstacles, coins)
+            dino_crash(dino, obstacles, coins, settings)
             break
 
     for coin in coins:
@@ -62,8 +62,9 @@ def check_collisions(dino, obstacles, coins, win_sound, crash_sound):
             break
 
 
-def dino_crash(dino, obstacles, coins):
+def dino_crash(dino, obstacles, coins, settings):
     dino.reset_position()
+    settings.set_objects_default_param()
 
     for obstacle in obstacles.copy():
         obstacles.remove(obstacle)

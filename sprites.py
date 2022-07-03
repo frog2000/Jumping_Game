@@ -31,8 +31,8 @@ class Dino:
 
         # set up the ship position
         self.rect.centerx = self.screen_rect.left + 60
-        self.rect.bottom = self.screen_rect.bottom - 10
-        self.centery = float(self.rect.centery)
+        self.rect.bottom = self.screen_rect.bottom
+        self.bottom = float(self.rect.bottom)
 
         self.dino_jumping = False
         self.jump_time = 1
@@ -43,20 +43,20 @@ class Dino:
         """ Allows for the ship movement in two dimensions"""
         if self.dino_jumping:
             if self.settings.dino_jump_velocity > 0:
-                self.centery -= self.settings.dino_jump_velocity
+                self.bottom -= self.settings.dino_jump_velocity
                 self.settings.dino_jump_velocity -= self.settings.dino_acceleration * self.jump_time**2
                 if self.settings.dino_jump_velocity <= 0:
                     self.jump_time = 1
             else:
-                self.centery -= self.settings.dino_jump_velocity
+                self.bottom -= self.settings.dino_jump_velocity
                 self.settings.dino_jump_velocity -= self.settings.dino_acceleration * self.jump_time**2
-                if self.centery >= self.screen_rect.bottom-40:
-                    self.centery = self.screen_rect.bottom - 40
+                if self.bottom >= self.screen_rect.bottom:
+                    self.bottom = self.screen_rect.bottom
                     self.jump_time = 1
                     self.dino_jumping = False
                     self.settings.set_dino_velocity()
 
-        self.rect.centery = self.centery
+        self.rect.bottom = self.bottom
 
     def blit_sprite(self):
         """ Draws the ship image """
@@ -104,12 +104,13 @@ class Cactus(Sprite):
         """ Draws the ship image """
         self.screen.blit(self.image, self.rect)
 
-    def update(self):
+    def update(self, group):
         """ Allows for the alien movement on the x-axis """
         self.centerx -= self.settings.object_velocity
         self.rect.centerx = self.centerx
 
         if self.rect.right <= 0:
+            group.remove(self)
             del self
 
 
@@ -141,10 +142,11 @@ class Cloud(Cactus):
         self.rect.bottom = random.randint(70, int(0.4*self.screen_rect.bottom))
         self.cloud_velocity = self.settings.object_velocity*(random.randint(30, 50)/100)
 
-    def update(self):
+    def update(self, group):
         """ Allows for the alien movement on the x-axis """
         self.centerx -= self.cloud_velocity
         self.rect.centerx = self.centerx
 
         if self.rect.right <= 0:
+            group.remove(self)
             del self
