@@ -12,7 +12,7 @@ class Settings:
         (self.window_width, self.window_height))
 
         self.dino_acceleration = 2
-        self.animation_interval = self.fps/30
+        self.animation_interval = self.fps/45
         self.speed_up_factor = 1.0001
 
         self.set_dino_velocity()
