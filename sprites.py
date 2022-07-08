@@ -2,6 +2,7 @@ import pygame
 from pygame.sprite import Sprite
 import os
 import random
+from abc import ABC
 
 
 cactus_image = pygame.image.load_extended(os.path.join("images", "cactus.png"))
@@ -12,6 +13,7 @@ path_main_character_images = os.path.join("images", "girl")
 main_character_images = [pygame.image.load_extended(os.path.join(path_main_character_images, image))
                          for image in os.listdir(path_main_character_images) if
                          os.path.isfile(os.path.join(path_main_character_images, image))]
+
 
 class Dino:
 
@@ -75,10 +77,6 @@ class Dino:
             self._next_image()
             self.current_animation_time = 0
 
-    # def jump(self):
-    #     if not self.dino_jumping:
-    #         self.dino_jumping = True
-
     def _next_image(self):
         if self.current_image >= len(self.dino_images) - 1:
             self.current_image = 0
@@ -88,13 +86,12 @@ class Dino:
         self.mask = pygame.mask.from_surface(self.dino_image)
 
 
-class Cactus(Sprite):
-    def __init__(self, screen, settings):
+class GameSprite(ABC, Sprite):
+    def __init__(self, screen, settings, image):
         super().__init__()
-
         self.screen = screen
         self.settings = settings
-        self.image = cactus_image
+        self.image = image
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
         self.screen_rect = screen.get_rect()
@@ -120,23 +117,23 @@ class Cactus(Sprite):
             del self
 
 
-class Rock(Cactus):
+class Cactus(GameSprite):
     def __init__(self, screen, settings):
-        super().__init__(screen, settings)
-        self.image = rock_image
-        self.mask = pygame.mask.from_surface(self.image)
+        self.image = cactus_image
+        super().__init__(screen, settings, self.image)
 
-        self.rect = self.image.get_rect()
+
+class Rock(GameSprite):
+    def __init__(self, screen, settings):
+        self.image = rock_image
+        super().__init__(screen, settings, self.image)
         self.rect.bottom = self.screen_rect.bottom + 25
 
 
-class Coin(Cactus):
+class Coin(GameSprite):
     def __init__(self, screen, settings):
-        super().__init__(screen, settings)
         self.image = coin_image
-        self.mask = pygame.mask.from_surface(self.image)
-
-        self.rect = self.image.get_rect()
+        super().__init__(screen, settings, self.image)
         self.rect.bottom = self.screen_rect.bottom - 10
 
     def update(self, group, scores):
@@ -150,11 +147,10 @@ class Coin(Cactus):
             del self
 
 
-class Cloud(Cactus):
+class Cloud(GameSprite):
     def __init__(self, screen, settings):
-        super().__init__(screen, settings)
         self.image = cloud_image
-        self.rect = self.image.get_rect()
+        super().__init__(screen, settings, self.image)
         self.rect.bottom = random.randint(70, int(0.4*self.screen_rect.bottom))
         self.cloud_velocity = self.settings.object_velocity*(random.randint(30, 50)/100)
 
