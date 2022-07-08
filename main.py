@@ -40,7 +40,7 @@ def run_game():
     loops = 0
 
     nn_model = neural_network.create_nn_model(2, 2)
-    nn_model = neural_network.train_nn_model(nn_model, [100], [100], [1])
+    # nn_model = neural_network.train_nn_model(nn_model, [100], [100], [1])
 
     while True:
         screen.blit(settings.background, (0,0))
