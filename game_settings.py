@@ -3,26 +3,29 @@ import os
 
 
 class Settings:
+    """ Main game settings """
     def __init__(self):
+
+        # set the game's window size
         self.window_width = 900
         self.window_height = 400
-        self.fps = 60
-        # self.background = (255, 255, 255)
+
+        self.fps = 60  # set the maximum frames per second
         self.background = pygame.transform.scale(pygame.image.load_extended(os.path.join("images", "background.png")),
-        (self.window_width, self.window_height))
+        (self.window_width, self.window_height))  # set the background image
 
-        self.dino_acceleration = 2
-        self.animation_interval = self.fps/45
-        self.speed_up_factor = 1.0001
+        self.main_character_acceleration = 2
+        self.animation_interval = self.fps/45  # character animation speed
+        self.speed_up_factor = 1.0001  # how quickly the game speeds up
 
-        self.set_dino_velocity()
+        self.set_main_character_velocity()
         self.set_objects_default_param()
         self.obstacle_generation_probability = 100
         self.prize_generation_probability = 500
         self.cloud_generation_probability = 300
 
-    def set_dino_velocity(self):
-        self.dino_jump_velocity = 30
+    def set_main_character_velocity(self):
+        self.main_character_jump_velocity = 30
 
     def set_objects_default_param(self):
         self.object_velocity = 8
