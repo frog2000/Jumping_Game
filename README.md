@@ -8,3 +8,9 @@ Coin icon created by Freepik - Flaticon (downloaded from https://www.flaticon.co
 Rock icon created by Icongeek26 - Flaticon (downloaded from https://www.flaticon.com/free-icons/rock)<br />
 Cloud icon created by vectorspoint - Flaticon (downloaded from https://www.flaticon.com/free-icons/cloud)<br />
 
+Tested with:<br />
+- tensorflow 2.9.1<br />
+- pygame 2.1.2<br />
+- numpy 1.23.0<br />
+- playsound 1.2.2<br />
+in Python 3.9.12
