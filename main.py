@@ -1,12 +1,12 @@
 # Jumping game similar to the T-Rex Dinosaur Game of the Chrome browser
 # with a vanilla NN attached to it
-# The character can very quickly learn how to jump over the obstacles
+# The character quickly learn how to jump over the obstacles
 #
 # Game created by Adrian Krzyzanowski
 #
 # Attributions:
 #
-# The main character images are used through the open license
+# The main character images are used through an open license
 # (images downloaded from https://www.gameart2d.com/freebies.html)
 #
 # Cactus icons created by Freepik - Flaticon (https://www.flaticon.com/free-icons/cactus)
@@ -60,9 +60,10 @@ def run_game():
         nn_model_input = np.array([settings.object_velocity, distance_to_obstacle]).reshape(1, -1)
 
         nn_prediction = nn_model.predict(nn_model_input, verbose=0)[0]
-        print("prediction: ", nn_prediction)
+        print("Prediction: ", nn_prediction)
 
-        if nn_prediction[1] > nn_prediction[0]:  # check if the nn predicted to jump or not
+        # jump if the nn predicted to do so or if the number of game loops is below 1000
+        if nn_prediction[1] > nn_prediction[0] or loops < 1000:
             game_func.initiate_jump(main_character, jump_sound, settings, scores, obstacles)
 
         # makes sure to generate the obstacle at appropriate intervals
@@ -94,7 +95,7 @@ def run_game():
         pygame.display.flip()  # refresh the screen
         settings.increase_difficulty()
 
-        print("lenght:", len(scores.success), "loops: ", loops)
+        print(f"Obstacles: {len(scores.success)}; Game Loops: {loops}")
 
         # (re)train the NN model only when at least 10 data points collected every 500 loops of the game
         if len(scores.success) >= 10 and loops % 500 == 0:
