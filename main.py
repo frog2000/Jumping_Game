@@ -66,11 +66,12 @@ def run_game():
         if nn_prediction[1] > nn_prediction[0] or loops < 1000:
             game_func.initiate_jump(main_character, jump_sound, settings, scores, obstacles)
 
-        # makes sure to generate the obstacle at appropriate intervals
+        # makes sure to generate the obstacle/prize at appropriate intervals
         if obstacle_interval >= settings.obstacle_interval:
             # try to generate new obstacles
             if game_func.generate_object(coins, Coin, screen, settings, settings.prize_generation_probability):
                 obstacle_interval = 0
+            # try to genrate a new prize
             else:
                 for obstacle_class in obstacle_classes:
                     if game_func.generate_object(obstacles, obstacle_class, screen, settings,
