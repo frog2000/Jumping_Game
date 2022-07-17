@@ -68,10 +68,10 @@ def run_game():
 
         # makes sure to generate the obstacle/prize at appropriate intervals
         if obstacle_interval >= settings.obstacle_interval:
-            # try to generate new obstacles
+            # try to generate new prize
             if game_func.generate_object(coins, Coin, screen, settings, settings.prize_generation_probability):
                 obstacle_interval = 0
-            # try to generate a new prize
+            # try to generate a new obstacle
             else:
                 for obstacle_class in obstacle_classes:
                     if game_func.generate_object(obstacles, obstacle_class, screen, settings,
